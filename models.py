@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Decimal, Integer, Boolean, Date, DateTime, Enum, Text, ForeignKey
+from sqlalchemy import Column, String, Numeric, Integer, Boolean, Date, DateTime, Enum, Text, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -50,11 +50,11 @@ class Debt(Base):
     name = Column(String(100), nullable=False)
     bank = Column(String(50))
     debt_type = Column(Enum(DebtType), nullable=False)
-    balance = Column(Decimal(12, 2), nullable=False)
-    original_amount = Column(Decimal(12, 2))
-    credit_limit = Column(Decimal(12, 2))          # สำหรับ OD/บัตรเครดิต
-    interest_rate = Column(Decimal(5, 2))           # % ต่อปี
-    min_payment = Column(Decimal(10, 2))
+    balance = Column(Numeric(12, 2), nullable=False)
+    original_amount = Column(Numeric(12, 2))
+    credit_limit = Column(Numeric(12, 2))          # สำหรับ OD/บัตรเครดิต
+    interest_rate = Column(Numeric(5, 2))           # % ต่อปี
+    min_payment = Column(Numeric(10, 2))
     due_day = Column(Integer)                       # วันที่ครบชำระ (1-31)
     priority = Column(Integer, default=1)           # Avalanche order
     last_four = Column(String(4))                   # เลขท้าย
@@ -70,7 +70,7 @@ class Account(Base):
     bank = Column(String(50))
     account_type = Column(Enum(AccountType), nullable=False)
     last_four = Column(String(4))
-    balance = Column(Decimal(12, 2), default=0)
+    balance = Column(Numeric(12, 2), default=0)
     color = Column(String(7), default="#60a5fa")
     icon = Column(String(10), default="🏦")
     is_active = Column(Boolean, default=True)
@@ -85,7 +85,7 @@ class Category(Base):
     category_type = Column(Enum(CategoryType), nullable=False)
     icon = Column(String(10), default="📁")
     color = Column(String(7), default="#60a5fa")
-    monthly_budget = Column(Decimal(10, 2))
+    monthly_budget = Column(Numeric(10, 2))
     is_default = Column(Boolean, default=False)     # ลบไม่ได้
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now())
@@ -95,7 +95,7 @@ class Transaction(Base):
     __tablename__ = "transactions"
     id = Column(String, primary_key=True, default=gen_uuid)
     transaction_type = Column(Enum(TransactionType), nullable=False)
-    amount = Column(Decimal(12, 2), nullable=False)
+    amount = Column(Numeric(12, 2), nullable=False)
     transaction_date = Column(Date, nullable=False)
     payment_method = Column(Enum(PaymentMethod), default=PaymentMethod.transfer)
     note = Column(Text)
@@ -119,6 +119,6 @@ class ExternalAsset(Base):
     __tablename__ = "external_assets"
     id = Column(String, primary_key=True, default=gen_uuid)
     name = Column(String(100), nullable=False)
-    value = Column(Decimal(12, 2), nullable=False)
+    value = Column(Numeric(12, 2), nullable=False)
     note = Column(Text)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
